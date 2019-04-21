@@ -1,7 +1,7 @@
 @using Microsoft.AspNetCore.Identity
 
-@inject SignInManager<IdentityUser> SignInManager
-@inject UserManager<IdentityUser> UserManager
+@inject SignInManager<HamrahBina.Models.Entities.ApplicationUser> SignInManager
+@inject UserManager<HamrahBina.Models.Entities.ApplicationUser> UserManager
 
 @if (SignInManager.IsSignedIn(User))
 {

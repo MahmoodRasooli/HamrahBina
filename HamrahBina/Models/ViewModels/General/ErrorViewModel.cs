@@ -1,6 +1,6 @@
 using System;
 
-namespace HamrahBina.Models
+namespace HamrahBina.Models.ViewModels.General
 {
     public class ErrorViewModel
     {

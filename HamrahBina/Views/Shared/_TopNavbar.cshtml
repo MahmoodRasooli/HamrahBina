@@ -1,0 +1,56 @@
+﻿@using Microsoft.AspNetCore.Identity
+
+@inject SignInManager<HamrahBina.Models.Entities.ApplicationUser> SignInManager
+@inject UserManager<HamrahBina.Models.Entities.ApplicationUser> UserManager
+
+<style>
+    .swal2-container {
+        margin-top: 40px;
+    }
+</style>
+@if (SignInManager.IsSignedIn(User))
+{
+    <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+        @*<div class="navbar-header">
+            <i class="navbar-minimalize minimalize-styl-2 btn btn-success"><i class="fa fa-bars"></i> </i>
+        </div>*@
+        <ul class="nav navbar-top-links navbar-right">
+            @if (!User.IsInRole("Admin"))
+            {
+                <li style="width: 200px;">
+                    <select class="position"></select>
+                </li>
+            }
+            <li>
+                <a asp-controller="Manage" asp-action="Index" class="welcome-message" title="Manage" role="button"> @UserManager.GetUserAsync(User).Result.FullName <i class="fa fa-user"></i></a>
+            </li>
+            <li>
+                <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
+                    <i class="fa fa-bell-o"></i><span class="label label-primary" id="notifyNumber"></span>
+                </a>
+                <ul class="dropdown-menu dropdown-alerts" id="notif"></ul>
+            </li>
+            @*@if (User.IsInRole("Admin"))
+            {
+                <li>
+                    <a asp-controller="Settings" asp-action="Index" class="welcome-message" title="Setting" role="button"> <i class="fa fa-cog"></i></a>
+                </li>
+            }*@
+            <li>
+            <li>
+                <form asp-controller="Account" asp-action="Logout" method="post" id="logoutForm">
+                    <button type="submit" class="btn btn-link navbar-btn"><i class="fa fa-sign-out"></i> خروج</button>
+                </form>
+            </li>
+        </ul>
+    </nav>
+}
+<script src="~/scripts/plugins/sweetalert/sweetalert.min.js"></script>
+<script>
+    const toast = Swal.mixin({
+        toast: true,
+        position: 'top-start',
+        showConfirmButton: false,
+        timer: 3000
+    });
+</script>

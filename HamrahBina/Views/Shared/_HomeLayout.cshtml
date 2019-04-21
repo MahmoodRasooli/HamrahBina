@@ -1,0 +1,27 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8">
+    <title>همراه بینا</title>
+    <meta name="description" content="Replacer theme">
+    <link href="~/css/bootstrap.css" rel="stylesheet">
+    <link href="~/css/bootstrap-rtl.min.css" rel="stylesheet">
+    <link href="~/css/replacer.css" rel="stylesheet">
+    <link href="~/css/font-awesome.css" rel="stylesheet">
+    <script src="~/Scripts/jquery-2.2.4.min.js"></script>
+</head>
+<body>
+    <partial name="_HomeNavbar" />
+    @RenderBody()
+    <partial name="_HomeFooter" />
+
+    <script src="~/js/jquery-3.3.1.slim.min.js"></script>
+    <script src="~/js/popper.min.js"></script>
+    <script src="~/js/bootstrap.min.js"></script>
+    <script src="~/js/replacer.js"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

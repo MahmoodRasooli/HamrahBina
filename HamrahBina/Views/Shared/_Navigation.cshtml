@@ -1,0 +1,156 @@
+﻿@using System.Linq.Expressions
+@using Microsoft.AspNetCore.Identity
+
+@inject SignInManager<HamrahBina.Models.Entities.ApplicationUser> SignInManager
+@inject UserManager<HamrahBina.Models.Entities.ApplicationUser> UserManager
+<script src="https://cdn.jsdelivr.net/npm/jquery"></script>
+
+<style>
+    .sidebar-nav {
+        background: #2f4050;
+    }
+
+        .sidebar-nav ul {
+            padding: 0;
+            margin: 0;
+            list-style: none;
+            background: #2f4050;
+        }
+
+        .sidebar-nav .metismenu {
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-orient: vertical;
+            -webkit-box-direction: normal;
+            -ms-flex-direction: column;
+            flex-direction: column;
+        }
+
+            .sidebar-nav .metismenu > li {
+                /*-webkit-box-flex: 1;
+    -ms-flex: 1 1 0%;
+    flex: 1 1 0%;*/
+                display: -webkit-box;
+                display: -ms-flexbox;
+                display: flex;
+                -webkit-box-orient: vertical;
+                -webkit-box-direction: normal;
+                -ms-flex-direction: column;
+                flex-direction: column;
+                position: relative;
+            }
+
+            .sidebar-nav .metismenu a {
+                position: relative;
+                display: block;
+                padding: 15px;
+                color: #adb5bd;
+                outline-width: 0;
+                transition: all .3s ease-out;
+            }
+
+                .sidebar-nav .metismenu a:hover,
+                .sidebar-nav .metismenu a:focus,
+                .sidebar-nav .metismenu a:active {
+                    color: #f8f9fa;
+                    text-decoration: none;
+                    background: #0b7285;
+                }
+
+    @@media (min-width: 992px) {
+        .sidebar-nav .metismenu li {
+            position: relative;
+        }
+
+        .sidebar-nav .metismenu > li > ul {
+            position: absolute;
+            right: 100%;
+            top: 0;
+            min-width: 200px;
+            z-index: 1001;
+        }
+
+        .sidebar-nav .metismenu > li:hover > ul {
+            height: auto !important;
+        }
+
+            .sidebar-nav .metismenu > li:hover > ul,
+            .sidebar-nav .metismenu > li:hover > ul.collapse {
+                display: block;
+            }
+
+        .sidebar-nav .metismenu > li:hover > a.has-arrow:after {
+            transform: rotate(135deg);
+        }
+
+        .heading-label {
+            margin-right: 20px;
+        }
+    }
+</style>
+
+@if (SignInManager.IsSignedIn(User))
+{
+    <nav class="navbar-default navbar-static-side sidebar-nav" role="navigation">
+        <ul class="nav metismenu" id="side-menu">
+            <li onmouseover="" class="nav-header">
+                <div class="dropdown profile-element">
+                    <span>
+                        <img alt="image" class="img-circle" width="50" src="~/images/NoImages.jpg" />
+                    </span>
+                    <a class="dropdown-toggle" asp-controller="Manage" asp-action="Index">
+                        <span class="clear">
+                            <span class="block m-t-xs">
+                                <strong class="font-bold">
+                                    @UserManager.GetUserAsync(User).Result.FullName
+                                </strong>
+                            </span>
+                        </span>
+                    </a>
+                </div>
+                <div class="logo-element">
+                    همراه بینا
+                </div>
+            </li>
+
+            <div class="col-md-3">
+                <nav class="sidebar-nav">
+                    <ul class="metismenu" id="menu1" style="width: 200px">
+
+                        <li>
+                            <a asp-area="" asp-controller="Home" asp-action="Index"><i class="fa fa-dashboard"></i> <span class="nav-label">پیشخوان</span></a>
+                        </li>
+                        <li class="">
+                            <a href="" class="has-arrow" aria-expanded="false"><i class="fa fa-bar-chart-o heading-label"></i> <span class="nav-label"> گزارش  </span></a>
+                            <ul class="mm-collapse">
+                                @{
+                                    <li class=""><a asp-area="" asp-controller="ApplicationUserLogs" asp-action="Index"> ورود کاربران</a></li>
+                                }
+
+                            </ul>
+                        </li>
+
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li>
+                                <a class="has-arrow" href="#" aria-expanded="false"><span class="heading-label"> مدیریت  </span> </a>
+                                <ul class="mm-collapse">
+                                    @{
+                                        <li class=""><a asp-controller="ApplicationUser" asp-action="Index"> کاربران </a></li>
+                                    }
+                                </ul>
+                            </li>
+                        }
+                    </ul>
+                </nav>
+            </div>
+        </ul>
+    </nav>
+}
+
+<script>
+    $(function() {
+        $('#menu1').metisMenu();
+    });
+</script>

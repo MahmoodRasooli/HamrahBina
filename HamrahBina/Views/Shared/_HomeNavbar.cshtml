@@ -1,0 +1,35 @@
+﻿@using Microsoft.AspNetCore.Identity
+
+@inject SignInManager<HamrahBina.Models.Entities.ApplicationUser> SignInManager
+@inject UserManager<HamrahBina.Models.Entities.ApplicationUser> UserManager
+
+<nav class="navbar navbar-expand-lg fixed-top navbar-light">
+    <a class="navbar-brand p-0" asp-controller="Home" asp-action="Index">
+        <span></span>
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse pull-right" id="navbarSupportedContent">
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item mx-1">
+                <a class="nav-link" asp-controller="Home" asp-action="Index">صفحه اصلی</a>
+            </li>
+        </ul>
+        <ul class="navbar-nav ml-auto pull-left">
+            <li class="nav-item">
+                @if (SignInManager.IsSignedIn(User))
+                {
+                    <form asp-action="Logout" asp-controller="Account" method="post" id="logoutForm">
+                        <a class="btn mr-2 btn-outline-dark" id="buy-button" asp-controller="Home" asp-action="Index">داشبورد</a>
+                        <button class="btn mr-2 btn-outline-dark" type="submit">خروج</button>
+                    </form>
+                }
+                else
+                {
+                    <a class="btn mr-2 btn-outline-dark" id="buy-button" asp-action="Login" asp-controller="Account">ورود به سامانه</a>
+                }
+            </li>
+        </ul>
+    </div>
+</nav>
