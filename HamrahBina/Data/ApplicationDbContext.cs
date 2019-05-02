@@ -16,5 +16,7 @@ namespace HamrahBina.Data
             : base(options)
         {
         }
+        public DbSet<HamrahBina.Models.Entities.ApplicationUserRole> ApplicationUserRole { get; set; }
+        public DbSet<HamrahBina.Models.Entities.ApplicationRole> ApplicationRole { get; set; }
     }
 }

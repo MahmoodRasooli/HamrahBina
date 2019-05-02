@@ -38,6 +38,11 @@ namespace HamrahBina.Common.Enums
         /// <summary>
         /// Username and/or password is incorrect
         /// </summary>
-        UsernameOrPasswordIsIncorrect = 102
+        UsernameOrPasswordIsIncorrect = 102,
+
+        /// <summary>
+        /// User not found
+        /// </summary>
+        UserNotFound = 103
     }
 }

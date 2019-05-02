@@ -10,6 +10,7 @@ using HamrahBina.Data;
 using HamrahBina.Models.Dto;
 using HamrahBina.Models.Entities;
 using HamrahBina.Models.ViewModels.Account;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -20,12 +21,12 @@ using Microsoft.IdentityModel.Tokens;
 namespace HamrahBina.Controllers
 {
     /// <summary>
-    /// Api to interact with clients.
+    /// Api to interact with clients for user's registeration and login.
     /// </summary>
     [Route("api/[controller]/[action]")]
     [ApiController]
-    [Authorize]
-    public class TransformController : ControllerBase
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+    public class MobileAuthController : ControllerBase
     {
         #region Properties
         private readonly ApplicationDbContext _context;
@@ -36,7 +37,7 @@ namespace HamrahBina.Controllers
         #endregion
 
         #region Ctor
-        public TransformController(ApplicationDbContext context,
+        public MobileAuthController(ApplicationDbContext context,
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             IHttpContextAccessor accessor,
@@ -50,6 +51,7 @@ namespace HamrahBina.Controllers
         }
         #endregion
 
+        #region Actions
         /// <summary>
         /// The login method of api.
         /// </summary>
@@ -138,36 +140,85 @@ namespace HamrahBina.Controllers
             });
         }
 
-        // GET: api/Transform
-        [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
-
-        // GET: api/Transform/5
-        [HttpGet("{id}", Name = "Get")]
-        public string Get(int id)
-        {
-            return "value";
-        }
-
-        // POST: api/Transform
+        /// <summary>
+        /// The users registeration mechanism of api.
+        /// </summary>
+        /// <param name="model">The info which is necessary to register a user</param>
+        /// <returns>Success message or the errors that prevents from registeration</returns>
+        [AllowAnonymous]
         [HttpPost]
-        public void Post([FromBody] string value)
+        public async Task<OkObjectResult> Register([FromBody]RegisterViewModel model)
         {
+            if (ModelState.IsValid)
+            {
+                var user = new ApplicationUser
+                {
+                    Email = model.Email.ToLower(),
+                    UserName = model.Email.ToLower(),
+                    FirstName = model.FirstName,
+                    LastName = model.LastName,
+                    PhoneNumber = model.PhoneNumber
+                };
+
+                var result = await _userManager.CreateAsync(user, model.Password);
+
+                if (result.Succeeded)
+                {
+                    return new OkObjectResult(new ApiResponseDto<LoginResponseDto>
+                    {
+                        Status = true,
+                        StatusCode = (int)ApiStatusCodeEnum.Successful,
+                        Message = "ثبت کاربر با موفقیت انجام شد.",
+                    });
+                }
+
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
+            }
+
+            return new OkObjectResult(new ApiResponseDto<LoginResponseDto>
+            {
+                Status = false,
+                StatusCode = (int)ApiStatusCodeEnum.ErrorOccured,
+                Message = ModelState.Values.SelectMany(p => p.Errors?.Select(q => q?.ErrorMessage)).FirstOrDefault()
+            });
         }
 
-        // PUT: api/Transform/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        /// <summary>
+        /// This method is used to get user's information.
+        /// </summary>
+        /// <param name="model">Contains the email address of the user</param>
+        /// <returns>User's basic information</returns>
+        [HttpPost]
+        public async Task<OkObjectResult> GetUserInfo([FromBody]GetUserInfoViewModel model)
         {
-        }
+            var user = _context.Users.FirstOrDefault(p=> p.UserName.ToLower() == model.Email.ToLower());
+            if (user != null)
+            {
+                return new OkObjectResult(new ApiResponseDto<UserInfoResponseViewModel>
+                {
+                    Status = true,
+                    StatusCode = (int)ApiStatusCodeEnum.Successful,
+                    Message = "",
+                    Response = new UserInfoResponseViewModel
+                    {
+                        Email = user.Email,
+                        FirstName = user.FirstName,
+                        LastLoginDate = user.LastLoginDate,
+                        LastName = user.LastName
+                    }
+                });
+            }
 
-        // DELETE: api/ApiWithActions/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
+            return new OkObjectResult(new ApiResponseDto<LoginResponseDto>
+            {
+                Status = false,
+                StatusCode = (int)ApiStatusCodeEnum.UserNotFound,
+                Message = "کاربری با این مشخصات در سیستم ثبت نشده است"
+            });
+        }         
+        #endregion
     }
 }
