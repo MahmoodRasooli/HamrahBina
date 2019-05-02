@@ -9,7 +9,7 @@ namespace HamrahBina.Models.Dto
     /// Base response class, all return types of Api actions should implement it.
     /// </summary>
     /// <typeparam name="T">The response type</typeparam>
-    public class ApiResponseDto<T> where T: class
+    public class ApiResponseDto<T>
     {
         /// <summary>
         /// Determines if the request done successfuly or not

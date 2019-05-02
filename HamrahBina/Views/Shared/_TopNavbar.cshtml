@@ -11,9 +11,9 @@
 @if (SignInManager.IsSignedIn(User))
 {
     <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
-        @*<div class="navbar-header">
+        <div class="navbar-header">
             <i class="navbar-minimalize minimalize-styl-2 btn btn-success"><i class="fa fa-bars"></i> </i>
-        </div>*@
+        </div>
         <ul class="nav navbar-top-links navbar-right">
             @if (!User.IsInRole("Admin"))
             {

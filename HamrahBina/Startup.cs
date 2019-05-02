@@ -147,8 +147,10 @@ namespace HamrahBina
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
-                app.UseHsts();
+                app.UseDeveloperExceptionPage();
+                app.UseDatabaseErrorPage();
+                //app.UseExceptionHandler("/Home/Error");
+                //app.UseHsts();
             }
 
             // MVC

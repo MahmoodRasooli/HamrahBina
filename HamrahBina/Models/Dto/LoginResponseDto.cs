@@ -11,6 +11,10 @@ namespace HamrahBina.Models.Dto
     public class LoginResponseDto
     {
         /// <summary>
+        /// User Id
+        /// </summary>
+        public string Id { get; set; }
+        /// <summary>
         /// Username
         /// </summary>
         public string UserName { get; set; }

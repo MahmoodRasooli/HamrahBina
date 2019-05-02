@@ -106,6 +106,7 @@ namespace HamrahBina.Controllers
                         Message = "",
                         Response = new LoginResponseDto
                         {
+                            Id = currentUser.Id,
                             FirstName = currentUser.FirstName,
                             LastName = currentUser.LastName,
                             Token = new JwtSecurityTokenHandler().WriteToken(token),
@@ -164,11 +165,12 @@ namespace HamrahBina.Controllers
 
                 if (result.Succeeded)
                 {
-                    return new OkObjectResult(new ApiResponseDto<LoginResponseDto>
+                    return new OkObjectResult(new ApiResponseDto<bool>
                     {
                         Status = true,
                         StatusCode = (int)ApiStatusCodeEnum.Successful,
                         Message = "ثبت کاربر با موفقیت انجام شد.",
+                        Response = true
                     });
                 }
 
@@ -178,11 +180,12 @@ namespace HamrahBina.Controllers
                 }
             }
 
-            return new OkObjectResult(new ApiResponseDto<LoginResponseDto>
+            return new OkObjectResult(new ApiResponseDto<bool>
             {
                 Status = false,
                 StatusCode = (int)ApiStatusCodeEnum.ErrorOccured,
-                Message = ModelState.Values.SelectMany(p => p.Errors?.Select(q => q?.ErrorMessage)).FirstOrDefault()
+                Message = ModelState.Values.SelectMany(p => p.Errors?.Select(q => q?.ErrorMessage)).FirstOrDefault(),
+                Response = false
             });
         }
 
@@ -194,7 +197,7 @@ namespace HamrahBina.Controllers
         [HttpPost]
         public async Task<OkObjectResult> GetUserInfo([FromBody]GetUserInfoViewModel model)
         {
-            var user = _context.Users.FirstOrDefault(p=> p.UserName.ToLower() == model.Email.ToLower());
+            var user = await Task.Run(() => _context.Users.FirstOrDefault(p => p.UserName.ToLower() == model.Email.ToLower()));
             if (user != null)
             {
                 return new OkObjectResult(new ApiResponseDto<UserInfoResponseViewModel>
@@ -204,6 +207,7 @@ namespace HamrahBina.Controllers
                     Message = "",
                     Response = new UserInfoResponseViewModel
                     {
+                        Id = user.Id,
                         Email = user.Email,
                         FirstName = user.FirstName,
                         LastLoginDate = user.LastLoginDate,
@@ -218,7 +222,7 @@ namespace HamrahBina.Controllers
                 StatusCode = (int)ApiStatusCodeEnum.UserNotFound,
                 Message = "کاربری با این مشخصات در سیستم ثبت نشده است"
             });
-        }         
+        }
         #endregion
     }
 }
