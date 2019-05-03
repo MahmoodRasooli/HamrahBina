@@ -4,12 +4,12 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace HamrahBina.Models.ViewModels.Account
+namespace HamrahBina.Models.Dto
 {
     /// <summary>
     /// To get user information, the email of the username is required
     /// </summary>
-    public class GetUserInfoViewModel
+    public class GetUserInfoDto
     {
         [Required(ErrorMessage = "{0} الزامی میباشد")]
         [Display(Name = "ایمیل")]
@@ -20,7 +20,7 @@ namespace HamrahBina.Models.ViewModels.Account
     /// <summary>
     /// The response of api, which contains user's information
     /// </summary>
-    public class UserInfoResponseViewModel
+    public class UserInfoResponseDto
     {
         public string Id { get; set; }
         public string FirstName { get; set; }

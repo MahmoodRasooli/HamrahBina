@@ -4,12 +4,12 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace HamrahBina.Models.ViewModels.Account
+namespace HamrahBina.Models.Dto
 {
     /// <summary>
     /// Used for user's registration
     /// </summary>
-    public class RegisterViewModel
+    public class RegisterDto
     {
         [Required(ErrorMessage = "{0} الزامی میباشد")]
         [Display(Name = "ایمیل")]

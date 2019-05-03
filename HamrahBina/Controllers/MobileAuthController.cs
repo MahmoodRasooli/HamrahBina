@@ -148,7 +148,7 @@ namespace HamrahBina.Controllers
         /// <returns>Success message or the errors that prevents from registeration</returns>
         [AllowAnonymous]
         [HttpPost]
-        public async Task<OkObjectResult> Register([FromBody]RegisterViewModel model)
+        public async Task<OkObjectResult> Register([FromBody]RegisterDto model)
         {
             if (ModelState.IsValid)
             {
@@ -195,17 +195,17 @@ namespace HamrahBina.Controllers
         /// <param name="model">Contains the email address of the user</param>
         /// <returns>User's basic information</returns>
         [HttpPost]
-        public async Task<OkObjectResult> GetUserInfo([FromBody]GetUserInfoViewModel model)
+        public async Task<OkObjectResult> GetUserInfo([FromBody]GetUserInfoDto model)
         {
             var user = await Task.Run(() => _context.Users.FirstOrDefault(p => p.UserName.ToLower() == model.Email.ToLower()));
             if (user != null)
             {
-                return new OkObjectResult(new ApiResponseDto<UserInfoResponseViewModel>
+                return new OkObjectResult(new ApiResponseDto<UserInfoResponseDto>
                 {
                     Status = true,
                     StatusCode = (int)ApiStatusCodeEnum.Successful,
                     Message = "",
-                    Response = new UserInfoResponseViewModel
+                    Response = new UserInfoResponseDto
                     {
                         Id = user.Id,
                         Email = user.Email,
