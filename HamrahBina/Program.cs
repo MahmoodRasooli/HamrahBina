@@ -14,7 +14,22 @@ namespace HamrahBina
     {
         public static void Main(string[] args)
         {
-            CreateWebHostBuilder(args).Build().Run();
+            try
+            {
+                using (StreamWriter writer = System.IO.File.CreateText("logfile.txt"))
+                {
+                    writer.Write("start");
+                }
+
+                CreateWebHostBuilder(args).Build().Run();
+            }
+            catch(Exception ex)
+            {
+                using (StreamWriter writer = System.IO.File.CreateText("logfile.txt"))
+                {
+                    writer.Write(ex.ToString());
+                }
+            }
         }
 
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
