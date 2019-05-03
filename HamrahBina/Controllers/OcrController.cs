@@ -21,7 +21,7 @@ namespace HamrahBina.Controllers
     /// </summary>
     [Route("api/[controller]/action")]
     [ApiController]
-    [Authorize(JwtBearerDefaults.AuthenticationScheme)]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class OcrController : ControllerBase
     {
         #region Properties
