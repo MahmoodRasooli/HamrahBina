@@ -216,7 +216,7 @@ namespace HamrahBina.Controllers
                 });
             }
 
-            return new OkObjectResult(new ApiResponseDto<LoginResponseDto>
+            return new OkObjectResult(new ApiResponseDto<UserInfoResponseDto>
             {
                 Status = false,
                 StatusCode = (int)ApiStatusCodeEnum.UserNotFound,
