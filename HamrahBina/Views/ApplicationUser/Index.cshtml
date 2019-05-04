@@ -1,0 +1,201 @@
+﻿
+@{
+    ViewData["Title"] = "کاربران";
+}
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-sm-4">
+        <h2>@ViewData["Title"]</h2>
+        <ol class="breadcrumb">
+            <li><a asp-area="" asp-controller="Dashboards" asp-action="Index"><i class="fa fa-home"></i> پیشخوان</a></li>
+            <li class="active"><strong>@ViewData["Title"]</strong></li>
+        </ol>
+    </div>
+</div>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>لیست @ViewData["Title"]</h5>
+                    <div class="ibox-tools">
+                        <a asp-action="Create" class="btn btn-success btn-xs">ایجاد</a>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <table class="table table-striped table-bordered table-hover dataTables-js" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>
+                                    @Html.DisplayName("ایمیل")
+                                </th>
+                                <th>
+                                    @Html.DisplayName("نام")
+                                </th>
+                                <th>
+                                    @Html.DisplayName(" نام خانوادگی")
+                                </th>
+                                <th>
+                                    @Html.DisplayName("شماره تلفن")
+                                </th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<link href="~/content/plugins/dataTables/datatables.min.css" rel="stylesheet" />
+
+<style type="text/css">
+    .dataTables_wrapper .dataTables_filter {
+        float: right;
+        text-align: right;
+        visibility: hidden;
+    }
+</style>
+
+@section Scripts {
+    <script src="~/scripts/plugins/dataTables/datatables.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var table = $('.dataTables-js').DataTable({
+                "language": {
+                    "url": "/content/Persian.json"
+                },
+                dom: '<"html5buttons"B>lTfgitp',
+                buttons: [
+                ],
+                "lengthMenu": [[10, 100, 1000, 2000], [10, 100, 1000, 2000]],
+                "processing": true,
+                "serverSide": true,
+                "ajax": {
+                    "url": "@Url.Action("GetGridData", "ApplicationUser")",
+                    "type": "POST",
+                    "error": function (xhr, error, thrown) {
+                        window.swal('خطا!', 'برقراری ارتباط مقدور نمی باشد!', 'error');
+                    }
+                },
+                "columns":
+                    [
+                        { "data": "email", "name": "Email", "orderable": false, "width": "20%", "searchable": true },
+                        { "data": "firstName", "name": "FirstName", "orderable": true, "width": "20%", "searchable": true  },
+                        { "data": "lastName", "name": "LastName", "width": "20%", "searchable": true  },
+                        { "data": "phoneNumber", "name": "PhoneNumber", "width": "20%", "searchable": true  },
+                        {
+                            render: function (data, type, row) {
+                                const deleteUrl = '@Url.Action("Delete", "ApplicationUser")';
+                                const viewUrl = '@Url.Action("View", "ApplicationUser")' + '\/' + row.id;
+                                const editUrl = '@Url.Action("Edit", "ApplicationUser")' + '\/' + row.id;
+                                var content = $('<div><a class="btn btn-white btn-sm" href="' + viewUrl + '"><i class="fa fa-eye"></i></a>'
+                                    + '<a class="btn btn-white btn-sm" href="' + editUrl + '"><i class="fa fa-pencil"></i></a>'
+                                    + '<a class="btn btn-white btn-sm" href="' + deleteUrl + '"><i class="fa fa-trash"></i></a></div>');
+
+                                return content.html();
+
+                            },
+                            className: "readonly"
+                        }
+                    ],
+                initComplete: function () {
+                    //////remove this part if you don't want search and clear button ...(optional)
+                    //var input = $('.dataTables_filter input').unbind();
+                    //var self = this.api();
+                    //var $searchButton = $('<button>')
+                    //    .addClass('btn btn-default btn-sm m-auto filterBtn')
+                    //    .text('جستجو')
+                    //    .click(function () {
+                    //        self.search(input.val()).draw();
+                    //    });
+                    //var $clearButton = $('<button>')
+                    //    .addClass('btn btn-default btn-sm m-auto filterBtn')
+                    //    .text('پاک کردن')
+                    //    .click(function () {
+                    //        input.val('');
+
+                    //        $("input.headerSearch").val(null);
+                    //        $("select.headerSearch").val(0);
+                    //        $('.dataTables-js thead tr:eq(1) th').each(function (i) {
+                    //            self.columns(i).search('');
+                    //        });
+                    //        self.search('');
+                    //        self.draw();
+                    //    });
+                    //$('.dataTables_filter').append($searchButton, $clearButton);
+                },
+                "drawCallback": function (settings) {
+
+                    @*$('.dataTables-js a.confirmButton')
+                        .on('click', function (e) {
+                            e.stopPropagation();
+                            var rowData = table.row($(this).parents('tr')).data();
+                            $('#page-wrapper').block({
+                                message: '<img src="/css/plugins/blueimp/img/loading.gif" />',
+                                css: { 'background': 'none', 'border': 'none' }
+                            });
+
+                            try {
+                                $.ajax({
+                                    url: '@Url.Action("ChangeConfirmStatus", "ApplicationUser")',
+                                    type: "POST",
+                                    data: { id: rowData.dT_RowId },
+                                    success: function (data) {
+                                        $('#page-wrapper').unblock();
+                                        if (data.status) {
+                                            window.swal('تکمیل فرآیند', 'تغییر وضعیت با موفقیت انجام شد', 'success');
+                                        }
+                                        else {
+                                            window.swal('خطا', data.message, 'error');
+                                        }
+
+                                        table.draw();
+                                    },
+                                    error: function () {
+                                        $('#page-wrapper').unblock();
+                                        window.swal('خطا!', 'برقراری ارتباط مقدور نمی باشد!', 'error');
+                                    }
+                                })
+                            }
+                            catch (e) {
+                                $('#page-wrapper').unblock();
+                                window.swal('خطا!', 'برقراری ارتباط مقدور نمی باشد!', 'error');
+                            }
+                        });
+
+                    var api = this.api();
+                    if ($('.dataTables_filter input').val() && api.rows().count() === 0) {
+                        window.swal({
+                            title: 'تکمیل فرایند',
+                            text: "موردی یافت نشد",
+                            type: 'success'
+                        });
+                    }*@
+                },
+                orderCellsTop: true,
+                fixedHeader: true,
+                responsive: {
+                    details: false
+                }
+            });
+
+            $('.dataTables-js thead tr').clone(true).appendTo('.dataTables-js thead');
+            $('.dataTables-js thead tr:eq(1) th').each(function (i) {
+                if (i < 4) {
+                    $(this).html('<input type="text" placeholder="جستجو" class="headerSearch" style="width: 100%" />');
+
+                    $('input', this).on('keyup change', function () {
+                        if (table.column(i).search() !== this.value) {
+                            table.columns(i).search(this.value).draw();
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+}
+

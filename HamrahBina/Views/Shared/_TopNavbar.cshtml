@@ -3,11 +3,13 @@
 @inject SignInManager<HamrahBina.Models.Entities.ApplicationUser> SignInManager
 @inject UserManager<HamrahBina.Models.Entities.ApplicationUser> UserManager
 
+
 <style>
     .swal2-container {
         margin-top: 40px;
     }
 </style>
+
 @if (SignInManager.IsSignedIn(User))
 {
     <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
@@ -31,11 +33,11 @@
                 <ul class="dropdown-menu dropdown-alerts" id="notif"></ul>
             </li>
             @*@if (User.IsInRole("Admin"))
-            {
-                <li>
-                    <a asp-controller="Settings" asp-action="Index" class="welcome-message" title="Setting" role="button"> <i class="fa fa-cog"></i></a>
-                </li>
-            }*@
+                {
+                    <li>
+                        <a asp-controller="Settings" asp-action="Index" class="welcome-message" title="Setting" role="button"> <i class="fa fa-cog"></i></a>
+                    </li>
+                }*@
             <li>
             <li>
                 <form asp-controller="Account" asp-action="Logout" method="post" id="logoutForm">

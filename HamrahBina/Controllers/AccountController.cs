@@ -13,11 +13,14 @@ namespace HamrahBina.Controllers
 {
     public class AccountController : Controller
     {
+        #region Properties
         private readonly ApplicationDbContext _context;
         private readonly IHttpContextAccessor _accessor;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        #endregion
 
+        #region Ctor
         public AccountController(
             ApplicationDbContext context,
             IHttpContextAccessor accessor,
@@ -29,14 +32,11 @@ namespace HamrahBina.Controllers
             _userManager = userManager;
             _signInManager = signInManager;
         }
+        #endregion
 
+        #region Actions
         public IActionResult Login()
         {
-            if (!string.IsNullOrEmpty(ErrorMessage))
-            {
-                ModelState.AddModelError(string.Empty, ErrorMessage);
-            }
-
             return View();
         }
 
@@ -44,13 +44,19 @@ namespace HamrahBina.Controllers
         public async Task<IActionResult> Login(LoginViewModel model)
         {
             if (ModelState.IsValid)
-            {                
+            {
                 var currentUser = _context.Users.FirstOrDefault(a => a.Email == model.Email);
                 if (currentUser != null)
                 {
                     if (currentUser.IsDisabled == true)
                     {
                         ModelState.AddModelError("", "حساب کاربری شما غیر فعال شده است .");
+                        return View();
+                    }
+
+                    if(!(await _userManager.IsInRoleAsync(currentUser, "Admin")))
+                    {
+                        ModelState.AddModelError("", "شما اجازه دسترسی به پنل مدیریتی را ندارید.");
                         return View();
                     }
 
@@ -174,11 +180,7 @@ namespace HamrahBina.Controllers
             {
                 return View();
             }
-        }
-
-        #region Temp
-        [TempData]
-        public string ErrorMessage { get; set; }
+        } 
         #endregion
     }
 }

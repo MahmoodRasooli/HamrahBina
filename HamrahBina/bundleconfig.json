@@ -1,0 +1,36 @@
+[
+  {
+    "outputFileName": "wwwroot/js/jsgrid.min.js",
+    "inputFiles": [
+      "wwwroot/content/plugins/jsgrid-1.5.3/i18n/jsgrid-de.js",
+      "wwwroot/content/plugins/jsgrid-1.5.3/i18n/jsgrid-es.js",
+      "wwwroot/content/plugins/jsgrid-1.5.3/i18n/jsgrid-fr.js",
+      "wwwroot/content/plugins/jsgrid-1.5.3/i18n/jsgrid-he.js",
+      "wwwroot/content/plugins/jsgrid-1.5.3/i18n/jsgrid-ja.js",
+      "wwwroot/content/plugins/jsgrid-1.5.3/i18n/jsgrid-ka.js",
+      "wwwroot/content/plugins/jsgrid-1.5.3/i18n/jsgrid-pl.js",
+      "wwwroot/content/plugins/jsgrid-1.5.3/i18n/jsgrid-pt.js",
+      "wwwroot/content/plugins/jsgrid-1.5.3/i18n/jsgrid-ru.js",
+      "wwwroot/content/plugins/jsgrid-1.5.3/i18n/jsgrid-tr.js",
+      "wwwroot/content/plugins/jsgrid-1.5.3/i18n/jsgrid-zh-cn.js",
+      "wwwroot/content/plugins/jsgrid-1.5.3/i18n/jsgrid-zh-tw.js",
+      "wwwroot/content/plugins/jsgrid-1.5.3/i18n/jsgrid-pt-br.js",
+      "wwwroot/content/plugins/jsgrid-1.5.3/jsgrid.min.js"
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    }
+  },
+  {
+    "outputFileName": "wwwroot/css/jsgrid.min.css",
+    "inputFiles": [
+      "wwwroot/content/plugins/jsgrid-1.5.3/jsgrid-theme.css",
+      "wwwroot/content/plugins/jsgrid-1.5.3/jsgrid.css"
+    ],
+    "minify": {
+      "enabled": true,
+      "renameLocals": true
+    }
+  }
+]
