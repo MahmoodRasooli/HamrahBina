@@ -55,31 +55,33 @@ namespace HamrahBina.Data
 
                 if (!_context.Roles.Any())
                 {
-                    var role = new ApplicationRole
+                    var adminRole = new ApplicationRole
                     {
                         Id = Guid.NewGuid().ToString(),
                         Name = "Admin",
-                        NormalizedName = "Admin"
+                        NormalizedName = "ADMIN"
                     };
-                    var result = await _roleManager.CreateAsync(role);
-
-                    if (result.Succeeded)
-                    {
-                        var user = await _userManager.FindByNameAsync("HamrahBina");
-                        await _userManager.AddToRoleAsync(user, "Admin");
-                    }
+                    var createAdminRoleResult = await _roleManager.CreateAsync(adminRole);
 
                     var userRole = new ApplicationRole
                     {
                         Id = Guid.NewGuid().ToString(),
-                        Name = "User",
-                        NormalizedName = "User"
+                        Name = "Uer",
+                        NormalizedName = "USER"
                     };
-                    await _roleManager.CreateAsync(userRole);
+                    var createUserRoleResult = await _roleManager.CreateAsync(userRole);
+
+                    if (createAdminRoleResult.Succeeded && createUserRoleResult.Succeeded)
+                    {
+                        var user = await _userManager.FindByNameAsync("admin@HamrahBina.com");
+                        await _userManager.AddToRoleAsync(user, adminRole.Name);
+                    }
                 }
             }
             catch (Exception ex)
-            { }
+            {
+                throw ex;
+            }
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using HamrahBina.Models.ViewModels.General;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -11,6 +12,13 @@ namespace HamrahBina.Models.Entities
     // Add profile data for application users by adding properties to the ApplicationUser class
     public class ApplicationUser : IdentityUser
     {
+        [EmailAddress]
+        [Display(Name = "ایمیل")]
+        public override string Email { get => base.Email; set => base.Email = value; }
+
+        [Display(Name = "شماره تلفن")]
+        public override string PhoneNumber { get => base.PhoneNumber; set => base.PhoneNumber = value; }
+
         [PersonalData]
         [MaxLength(20)]
         [Display(Name = "نام")]
@@ -51,9 +59,10 @@ namespace HamrahBina.Models.Entities
         
         // Identity Relation
         public virtual ICollection<IdentityUserClaim<string>> Claims { get; set; }
+
         public virtual ICollection<IdentityUserLogin<string>> Logins { get; set; }
+
         public virtual ICollection<IdentityUserToken<string>> Tokens { get; set; }
-        public virtual ICollection<ApplicationUserRole> UserRoles { get; set; }
 
         //Not Map
         [NotMapped]
@@ -62,5 +71,8 @@ namespace HamrahBina.Models.Entities
 
         [NotMapped]
         public string Search => FirstName + " " + LastName + " " + NationalId;
+
+        [NotMapped]
+        public List<SelectItem> RolesList { get; set; }
     }
 }

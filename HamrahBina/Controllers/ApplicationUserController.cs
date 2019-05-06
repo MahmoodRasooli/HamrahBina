@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq.Dynamic.Core;
+using Microsoft.EntityFrameworkCore;
 
 namespace HamrahBina.Controllers
 {
@@ -40,11 +41,14 @@ namespace HamrahBina.Controllers
         #endregion
 
         #region Actions
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Index()
         {
             return await Task.Run(() => View());
         }
 
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<JsonResult> GetGridData(DataTableRequestViewModel<ApplicationUser> dataTableModel)
         {
             if (dataTableModel != null)
@@ -83,6 +87,98 @@ namespace HamrahBina.Controllers
             }
             else
                 return new JsonResult(null);
+        }
+
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> View(string id)
+        {
+            var entity = _context.Users.FirstOrDefault(p => p.Id == id);
+            return View(entity);
+        }
+
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Edit(string id)
+        {
+            var entity = _context.Users.FirstOrDefault(p => p.Id == id);
+            var userRoles = await _userManager.GetRolesAsync(entity);
+
+            entity.RolesList = _context.Roles.ToList().Select(x => new SelectItem
+            {
+                Selected = userRoles.Contains(x.Name),
+                Title = x.Name,
+                Value = x.Name
+            }).ToList();
+
+            return View(entity);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Edit(string id, ApplicationUser input)
+        {
+            if (ModelState.IsValid)
+            {
+                var entity = _context.Users.FirstOrDefault(p => p.Id == input.Id);
+                entity.FirstName = input.FirstName;
+                entity.LastName = input.LastName;
+                entity.IsDisabled = input.IsDisabled;
+                entity.Email = input.Email;
+                entity.UserName = input.Email;
+                entity.PhoneNumber = input.PhoneNumber;
+                entity.NationalId = input.NationalId;
+
+                var currentUserRoles = await _userManager.GetRolesAsync(entity);
+                var newUserRoles = input.RolesList.Where(p=>p.Selected)
+                    .Select(p => p.Value)
+                    .ToList();
+
+                var result = await _userManager.AddToRolesAsync(entity, newUserRoles.Except(currentUserRoles).ToList());
+                if (!result.Succeeded)
+                {
+                    ModelState.AddModelError("", result.Errors.First().ToString());
+                    return View();
+                }
+
+                result = await _userManager.RemoveFromRolesAsync(entity, currentUserRoles.Except(newUserRoles).ToList());
+                if (!result.Succeeded)
+                {
+                    ModelState.AddModelError("", result.Errors.First().ToString());
+                    return View();
+                }
+
+                _context.Users.Update(entity);
+                await _context.SaveChangesAsync();
+                return RedirectToAction("Index");
+            }
+
+            return View();
+        }
+
+        [HttpPost]
+        [Authorize(Roles = "Admin")]
+        public async Task<JsonResult> Delete(string id)
+        {
+            var entity = _context.Users.FirstOrDefault(p => p.Id == id);
+            var userRoles = _context.ApplicationUserRole
+                .Where(p => p.UserId == id)
+                .ToList();
+
+            var currentUserRoles = await _userManager.GetRolesAsync(entity);
+            var result = await _userManager.RemoveFromRolesAsync(entity, currentUserRoles);
+            if (!result.Succeeded)
+                return Json(new
+                {
+                    status = false,
+                    message = result.Errors.Select(p => p.Description).FirstOrDefault()
+                });
+
+            _context.Users.Remove(entity);
+            await _context.SaveChangesAsync();
+            return Json(new
+            {
+                status = true,
+                message = "عملیات با موفقیت انجام شد."
+            });
         }
         #endregion
     }

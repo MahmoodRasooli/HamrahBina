@@ -5,10 +5,10 @@
 
 <div class="row wrapper border-bottom white-bg page-heading">
     <div class="col-sm-4">
-        <h2>@ViewData["Title"]</h2>
+        <h2>لیست @ViewData["Title"]</h2>
         <ol class="breadcrumb">
-            <li><a asp-area="" asp-controller="Dashboards" asp-action="Index"><i class="fa fa-home"></i> پیشخوان</a></li>
-            <li class="active"><strong>@ViewData["Title"]</strong></li>
+            <li><a asp-area="" asp-controller="Home" asp-action="Index"><i class="fa fa-home"></i> پیشخوان</a></li>
+            <li class="active"><strong>لیست @ViewData["Title"]</strong></li>
         </ol>
     </div>
 </div>
@@ -19,9 +19,6 @@
             <div class="ibox float-e-margins">
                 <div class="ibox-title">
                     <h5>لیست @ViewData["Title"]</h5>
-                    <div class="ibox-tools">
-                        <a asp-action="Create" class="btn btn-success btn-xs">ایجاد</a>
-                    </div>
                 </div>
                 <div class="ibox-content">
                     <table class="table table-striped table-bordered table-hover dataTables-js" style="width:100%">
@@ -94,7 +91,7 @@
                                 const editUrl = '@Url.Action("Edit", "ApplicationUser")' + '\/' + row.id;
                                 var content = $('<div><a class="btn btn-white btn-sm" href="' + viewUrl + '"><i class="fa fa-eye"></i></a>'
                                     + '<a class="btn btn-white btn-sm" href="' + editUrl + '"><i class="fa fa-pencil"></i></a>'
-                                    + '<a class="btn btn-white btn-sm" href="' + deleteUrl + '"><i class="fa fa-trash"></i></a></div>');
+                                    + '<a class="deleteUser btn btn-white btn-sm"><i class="fa fa-trash"></i></a></div>');
 
                                 return content.html();
 
@@ -103,47 +100,36 @@
                         }
                     ],
                 initComplete: function () {
-                    //////remove this part if you don't want search and clear button ...(optional)
-                    //var input = $('.dataTables_filter input').unbind();
-                    //var self = this.api();
-                    //var $searchButton = $('<button>')
-                    //    .addClass('btn btn-default btn-sm m-auto filterBtn')
-                    //    .text('جستجو')
-                    //    .click(function () {
-                    //        self.search(input.val()).draw();
-                    //    });
-                    //var $clearButton = $('<button>')
-                    //    .addClass('btn btn-default btn-sm m-auto filterBtn')
-                    //    .text('پاک کردن')
-                    //    .click(function () {
-                    //        input.val('');
-
-                    //        $("input.headerSearch").val(null);
-                    //        $("select.headerSearch").val(0);
-                    //        $('.dataTables-js thead tr:eq(1) th').each(function (i) {
-                    //            self.columns(i).search('');
-                    //        });
-                    //        self.search('');
-                    //        self.draw();
-                    //    });
-                    //$('.dataTables_filter').append($searchButton, $clearButton);
                 },
                 "drawCallback": function (settings) {
 
-                    @*$('.dataTables-js a.confirmButton')
-                        .on('click', function (e) {
-                            e.stopPropagation();
-                            var rowData = table.row($(this).parents('tr')).data();
-                            $('#page-wrapper').block({
-                                message: '<img src="/css/plugins/blueimp/img/loading.gif" />',
-                                css: { 'background': 'none', 'border': 'none' }
-                            });
+                    $(".deleteUser").click(function (e) {
+                        e.stopPropagation();
+                        e.preventDefault();
 
-                            try {
+                        window.swal({
+                            title: 'هشدار',
+                            text: "آیا از حذف کاربر مطمئنید؟",
+                            type: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#3085d6',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'تایید',
+                            cancelButtonText: 'انصراف',
+                        }).then((result) => {
+                            if (result.value) {
+                                var rowData = table.row($(this).parents('tr')).data();
+
                                 $.ajax({
-                                    url: '@Url.Action("ChangeConfirmStatus", "ApplicationUser")',
+                                    url: '@Url.Action("Delete", "ApplicationUser")',
                                     type: "POST",
-                                    data: { id: rowData.dT_RowId },
+                                    data: { id: rowData.id },
+                                    beforeSend: function (xhr) {
+                                        $('#page-wrapper').block({
+                                            message: '<img src="/images/loading.gif" />',
+                                            css: { 'background': 'none', 'border': 'none' }
+                                        });
+                                    },
                                     success: function (data) {
                                         $('#page-wrapper').unblock();
                                         if (data.status) {
@@ -159,22 +145,10 @@
                                         $('#page-wrapper').unblock();
                                         window.swal('خطا!', 'برقراری ارتباط مقدور نمی باشد!', 'error');
                                     }
-                                })
-                            }
-                            catch (e) {
-                                $('#page-wrapper').unblock();
-                                window.swal('خطا!', 'برقراری ارتباط مقدور نمی باشد!', 'error');
+                                });
                             }
                         });
-
-                    var api = this.api();
-                    if ($('.dataTables_filter input').val() && api.rows().count() === 0) {
-                        window.swal({
-                            title: 'تکمیل فرایند',
-                            text: "موردی یافت نشد",
-                            type: 'success'
-                        });
-                    }*@
+                    });
                 },
                 orderCellsTop: true,
                 fixedHeader: true,

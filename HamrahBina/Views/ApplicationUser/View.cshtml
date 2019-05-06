@@ -1,0 +1,94 @@
+﻿@model HamrahBina.Models.Entities.ApplicationUser
+
+@{
+    ViewData["Title"] = "کاربران";
+}
+
+<div class="row wrapper border-bottom white-bg page-heading">
+    <div class="col-sm-4">
+        <h2>مشاهده اطلاعات @ViewData["Title"]</h2>
+        <ol class="breadcrumb">
+            <li><a asp-area="" asp-controller="Home" asp-action="Index"><i class="fa fa-home"></i>پیشخوان</a></li>
+            <li><a asp-action="Index">لیست @ViewData["Title"]</a></li>
+            <li class="active"><strong>مشاهده اطلاعات @ViewData["Title"]</strong></li>
+        </ol>
+    </div>
+    <div class="col-sm-8">
+        <div class="title-action pull-right">
+            <a asp-action="Index" class="btn btn-white">بازگشت به لیست</a>
+        </div>
+    </div>
+</div>
+
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h3>جزئیات کاربر </h3>
+                </div>
+                <div class="ibox-content" style="border-top:none">
+                    <table class="table table-striped">
+                        <tbody>
+                            <tr>
+                                <td class="col-lg-2">
+                                    @Html.DisplayNameFor(model => model.FirstName)
+                                </td>
+                                <td class="col-lg-10">
+                                    @Html.DisplayFor(model => model.FirstName)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    @Html.DisplayNameFor(model => model.LastName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(model => model.LastName)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    @Html.DisplayNameFor(model => model.PhoneNumber)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(model => model.PhoneNumber)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    @Html.DisplayNameFor(model => model.Email)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(model => model.Email)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    @Html.DisplayNameFor(model => model.CreateDate)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(model => model.CreateDate)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    @Html.DisplayNameFor(model => model.NationalId)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(model => model.NationalId)
+                                </td>
+                            </tr>
+                            <tr class="last-row" style="background-color:white;border-bottom:none">
+                                <td>
+                                    <br />
+                                    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-success">ویرایش</a>
+                                    <a asp-action="Index" class="btn btn-white">بازگشت به لیست</a>
+                                </td>
+                                <td></td>
+                            </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
