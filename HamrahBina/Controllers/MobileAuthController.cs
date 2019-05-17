@@ -6,6 +6,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using HamrahBina.Common.Enums;
+using HamrahBina.Common.Tools;
 using HamrahBina.Data;
 using HamrahBina.Models.Dto;
 using HamrahBina.Models.Entities;
@@ -59,6 +60,7 @@ namespace HamrahBina.Controllers
         /// <returns>Returns user's info and an authentication token if login is successful and respective error if not</returns>
         [AllowAnonymous]
         [HttpPost]
+        [ApiExceptionFilter]
         public async Task<OkObjectResult> Login([FromBody]LoginViewModel model)
         {
             if (ModelState.IsValid)
@@ -92,8 +94,8 @@ namespace HamrahBina.Controllers
 
                     var claims = new[]
                     {
-                        new Claim(JwtRegisteredClaimNames.Sub, model.Email),
-                        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                        new Claim(ClaimTypes.NameIdentifier, currentUser.Id),
+                        new Claim(ClaimTypes.Name, currentUser.UserName),
                     };
 
                     var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Tokens:Key"]));
@@ -148,6 +150,7 @@ namespace HamrahBina.Controllers
         /// <returns>Success message or the errors that prevents from registeration</returns>
         [AllowAnonymous]
         [HttpPost]
+        [ApiExceptionFilter]
         public async Task<OkObjectResult> Register([FromBody]RegisterDto model)
         {
             if (ModelState.IsValid)
@@ -165,12 +168,12 @@ namespace HamrahBina.Controllers
 
                 if (result.Succeeded)
                 {
-                    return new OkObjectResult(new ApiResponseDto<bool>
+                    return new OkObjectResult(new ApiResponseDto<string>
                     {
                         Status = true,
                         StatusCode = (int)ApiStatusCodeEnum.Successful,
                         Message = "ثبت کاربر با موفقیت انجام شد.",
-                        Response = true
+                        Response = true.ToString()
                     });
                 }
 
@@ -180,12 +183,12 @@ namespace HamrahBina.Controllers
                 }
             }
 
-            return new OkObjectResult(new ApiResponseDto<bool>
+            return new OkObjectResult(new ApiResponseDto<string>
             {
                 Status = false,
                 StatusCode = (int)ApiStatusCodeEnum.ErrorOccured,
                 Message = ModelState.Values.SelectMany(p => p.Errors?.Select(q => q?.ErrorMessage)).FirstOrDefault(),
-                Response = false
+                Response = false.ToString()
             });
         }
 
@@ -195,9 +198,11 @@ namespace HamrahBina.Controllers
         /// <param name="model">Contains the email address of the user</param>
         /// <returns>User's basic information</returns>
         [HttpPost]
+        [ApiExceptionFilter]
         public async Task<OkObjectResult> GetUserInfo([FromBody]GetUserInfoDto model)
         {
             var user = await Task.Run(() => _context.Users.FirstOrDefault(p => p.UserName.ToLower() == model.Email.ToLower()));
+
             if (user != null)
             {
                 return new OkObjectResult(new ApiResponseDto<UserInfoResponseDto>

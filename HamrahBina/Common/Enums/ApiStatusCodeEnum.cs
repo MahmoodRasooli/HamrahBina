@@ -26,6 +26,11 @@ namespace HamrahBina.Common.Enums
         ErrorOccured = 2,
 
         /// <summary>
+        /// The inputs are invalid or null
+        /// </summary>
+        InputsAreInvalid = 3,
+
+        /// <summary>
         /// User is disabled
         /// </summary>
         UserIsDisabled = 100,

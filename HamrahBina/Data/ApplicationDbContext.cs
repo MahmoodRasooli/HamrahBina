@@ -18,5 +18,7 @@ namespace HamrahBina.Data
         }
         public DbSet<HamrahBina.Models.Entities.ApplicationUserRole> ApplicationUserRole { get; set; }
         public DbSet<HamrahBina.Models.Entities.ApplicationRole> ApplicationRole { get; set; }
+        public DbSet<HamrahBina.Models.Entities.ApiCallLog> ApiCallLogs { get; set; }
+        public DbSet<HamrahBina.Models.Entities.OcrCallLog> OcrCallLogs { get; set; }
     }
 }
