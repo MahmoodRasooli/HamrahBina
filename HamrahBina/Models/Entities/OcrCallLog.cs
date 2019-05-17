@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -57,5 +58,29 @@ namespace HamrahBina.Models.Entities
         /// Shows if the calling ocr was successful
         /// </summary>
         public bool IsSuccessful { get; set; }
+
+        /// <summary>
+        /// The username of the api call log
+        /// </summary>
+        [NotMapped]
+        public string UserName { get; set; }
+
+        /// <summary>
+        /// User's uploaded file
+        /// </summary>
+        [NotMapped]
+        public string InputFileName => !string.IsNullOrEmpty(Input) ? Input.Split('#').FirstOrDefault() : "";
+
+        /// <summary>
+        /// Returns the persian date and time of the equivalant gregorian CreateDate
+        /// </summary>
+        [NotMapped]
+        public string CreateDateFa => $"{new MD.PersianDateTime.PersianDateTime(CreateDate).ToShortDateString()} {CreateDate.ToString("HH:mm:ss")}";
+
+        /// <summary>
+        /// Returns the persian date and time of the equivalant gregorian CreateDate
+        /// </summary>
+        [NotMapped]
+        public string ResponseDateFa => $"{new MD.PersianDateTime.PersianDateTime(ResponseDate).ToShortDateString()} {ResponseDate.ToString("HH:mm:ss")}";
     }
 }

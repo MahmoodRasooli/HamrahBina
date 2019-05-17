@@ -124,10 +124,9 @@
                         <li class="">
                             <a href="#" class="has-arrow" aria-expanded="false"><i class="fa fa-bar-chart-o heading-label"></i> <span class="nav-label"> گزارش  </span></a>
                             <ul class="mm-collapse">
-                                @{
-                                    <li class=""><a asp-area="" asp-controller="ApplicationUserLogs" asp-action="Index"> ورود کاربران</a></li>
-                                }
-
+                                <li class=""><a asp-area="" asp-controller="ApplicationUserLogs" asp-action="Index"> ورود کاربران</a></li>
+                                <li class=""><a asp-area="" asp-controller="Reports" asp-action="ApiLogs">درخواست های کاربران</a></li>
+                                <li class=""><a asp-area="" asp-controller="Reports" asp-action="OcrLogs">پاسخ های OCR</a></li>
                             </ul>
                         </li>
 
@@ -150,7 +149,7 @@
 }
 
 <script>
-    $(function() {
+    $(function () {
         $('#menu1').metisMenu();
     });
 </script>

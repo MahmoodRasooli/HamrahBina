@@ -98,7 +98,7 @@ namespace HamrahBina.Controllers
             };
 
             _context.ApiCallLogs.Add(apiCallLog);
-            await _context.SaveChangesAsync();
+            _context.SaveChanges(true);
 
             var ocrApi = new HamrahBina.Providers.OcrProviders.CloudmersiveProvider();
             var ocrCallLog = new OcrCallLog

@@ -16,7 +16,7 @@ namespace HamrahBina.Common.Tools
             context.Result = new OkObjectResult(new ApiResponseDto<string>
             {
                 Message = "خطا در عملیات",
-                Response = null,
+                Response = context.Exception.ToString(),
                 Status = false,
                 StatusCode = (int)ApiStatusCodeEnum.ExceptionOccured
             });
