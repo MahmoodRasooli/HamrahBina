@@ -69,16 +69,31 @@ namespace HamrahBina.Controllers
         [ApiExceptionFilter]
         public async Task<OkObjectResult> Transform(IFormFile file)
         {
+            var userId = _userManager.GetUserId(User);
+            var now = DateTime.Now.ToString("yyyy_mm_dd_hh_mm_ss");
+
             if (file == null)
+            {
+                var logInput = $"{userId}_{now}_فایل ورودی صحیح نیست";
+
+                var apiFailureCallLog = new ApiCallLog
+                {
+                    CreateDate = DateTime.Now,
+                    Input = logInput,
+                    UserId = userId,
+                };
+
+                _context.ApiCallLogs.Add(apiFailureCallLog);
+                _context.SaveChanges(true);
+
                 return new OkObjectResult(new ApiResponseDto<TransformResponseDto>
                 {
                     Status = false,
                     StatusCode = (int)ApiStatusCodeEnum.InputsAreInvalid,
                     Message = "فایل ورودی صحیح نیست"
                 });
+            }
 
-            var userId = _userManager.GetUserId(User);
-            var now = DateTime.Now.ToString("yyyy_mm_dd_hh_mm_ss");
             var fileName = $"{userId}_{now}_{file.FileName}";
             var uploads = Path.Combine(_hostingEnvironment.WebRootPath, "UserUploads");
             if (file.Length > 0)

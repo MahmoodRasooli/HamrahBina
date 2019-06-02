@@ -78,6 +78,8 @@ namespace HamrahBina.Controllers
                         query = query.Where(p => p.Input.Contains(searchObj.Input));
                 }
 
+                var filteredCount = query.Count();
+
                 if (!string.IsNullOrEmpty(dataTableModel.SortPhrase))
                     query = query.OrderBy(dataTableModel.SortPhrase);
                 else
@@ -88,7 +90,7 @@ namespace HamrahBina.Controllers
                 {
                     Draw = dataTableModel.Draw,
                     RecordsTotal = totalCount,
-                    RecordsFiltered = totalCount,
+                    RecordsFiltered = filteredCount,
                     Data = result,
                 });
             }
@@ -152,6 +154,8 @@ namespace HamrahBina.Controllers
                         query = query.Where(p => p.OcrName.Contains(searchObj.OcrName));
                 }
 
+                var filteredCount = query.Count();
+
                 if (!string.IsNullOrEmpty(dataTableModel.SortPhrase))
                     query = query.OrderBy(dataTableModel.SortPhrase);
                 else
@@ -162,7 +166,7 @@ namespace HamrahBina.Controllers
                 {
                     Draw = dataTableModel.Draw,
                     RecordsTotal = totalCount,
-                    RecordsFiltered = totalCount,
+                    RecordsFiltered = filteredCount,
                     Data = result,
                 });
             }

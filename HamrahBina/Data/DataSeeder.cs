@@ -28,8 +28,29 @@ namespace HamrahBina.Data
             try
             {
                 _context.Database.EnsureCreated();
+                if (!_context.Roles.Any(p => p.Name.ToLower() == "Admin".ToLower()))
+                {
+                    var adminRole = new ApplicationRole
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        Name = "Admin",
+                        NormalizedName = "ADMIN"
+                    };
+                    var createAdminRoleResult = await _roleManager.CreateAsync(adminRole);
+                }
 
-                if (!_context.Users.Any())
+                if (!_context.Roles.Any(p => p.Name.ToLower() == "User".ToLower()))
+                {
+                    var userRole = new ApplicationRole
+                    {
+                        Id = Guid.NewGuid().ToString(),
+                        Name = "User",
+                        NormalizedName = "USER"
+                    };
+                    var createUserRoleResult = await _roleManager.CreateAsync(userRole);
+                }
+
+                if (!_context.Users.Any(p => p.UserName.ToLower() == "admin@HamrahBina.com".ToLower()))
                 {
                     var user = new ApplicationUser
                     {
@@ -45,7 +66,7 @@ namespace HamrahBina.Data
                         EmailConfirmed = true,
                     };
 
-                    var result = await _userManager.CreateAsync(user, "123456");
+                    var result = await _userManager.CreateAsync(user, "!QAZ@WSX#EDC");
                     if (result.Succeeded)
                     {
                         user.EmailConfirmed = true;
@@ -53,30 +74,10 @@ namespace HamrahBina.Data
                     }
                 }
 
-                if (!_context.Roles.Any())
-                {
-                    var adminRole = new ApplicationRole
-                    {
-                        Id = Guid.NewGuid().ToString(),
-                        Name = "Admin",
-                        NormalizedName = "ADMIN"
-                    };
-                    var createAdminRoleResult = await _roleManager.CreateAsync(adminRole);
+                var adminUser = await _userManager.FindByNameAsync("admin@HamrahBina.com");
 
-                    var userRole = new ApplicationRole
-                    {
-                        Id = Guid.NewGuid().ToString(),
-                        Name = "Uer",
-                        NormalizedName = "USER"
-                    };
-                    var createUserRoleResult = await _roleManager.CreateAsync(userRole);
-
-                    if (createAdminRoleResult.Succeeded && createUserRoleResult.Succeeded)
-                    {
-                        var user = await _userManager.FindByNameAsync("admin@HamrahBina.com");
-                        await _userManager.AddToRoleAsync(user, adminRole.Name);
-                    }
-                }
+                if (!(await _userManager.IsInRoleAsync(adminUser, "Admin")))
+                    await _userManager.AddToRoleAsync(adminUser, "Admin");
             }
             catch (Exception ex)
             {
