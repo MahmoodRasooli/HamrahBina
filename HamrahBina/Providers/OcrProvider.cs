@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -27,6 +28,18 @@ namespace HamrahBina.Providers
     }
 
     /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    public class ExtendedOCRTransformationResult<T> : OCRTransformationResult
+    {
+        /// <summary>
+        /// Extra information from calling the OCR
+        /// </summary>
+        public T ExtraInfo { get; set; }
+    }
+
+    /// <summary>
     /// Base interface which should be implemented by every and each OCR api which is used.
     /// </summary>
     public interface IOCRProvider
@@ -37,10 +50,15 @@ namespace HamrahBina.Providers
         string Name { get; }
 
         /// <summary>
+        /// The base url of the api, it is usually the site address
+        /// </summary>
+        string BaseUrl { get; }
+
+        /// <summary>
         /// Base method for interacting with OCR apis
         /// </summary>
         /// <returns></returns>
-        OCRTransformationResult Transform(System.IO.Stream imageStream);
+        OCRTransformationResult Transform(IFormFile file);
     }
 
     /// <summary>
@@ -51,7 +69,9 @@ namespace HamrahBina.Providers
     {
         public string Name => "DummyProvider";
 
-        public OCRTransformationResult Transform(System.IO.Stream imageStream)
+        public string BaseUrl => "";
+
+        public OCRTransformationResult Transform(IFormFile file)
         {
             return new OCRTransformationResult
             {

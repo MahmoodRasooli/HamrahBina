@@ -3,6 +3,7 @@ using Cloudmersive.APIClient.NET.OCR.Api;
 using Cloudmersive.APIClient.NET.OCR.Client;
 using Cloudmersive.APIClient.NET.OCR.Model;
 using System.Diagnostics;
+using Microsoft.AspNetCore.Http;
 
 namespace HamrahBina.Providers.OcrProviders
 {
@@ -11,9 +12,22 @@ namespace HamrahBina.Providers.OcrProviders
     /// </summary>
     public class CloudmersiveProvider : IOCRProvider
     {
+        /// <summary>
+        /// Ocr's name
+        /// </summary>
         public string Name { get => "CloudmersiveProvider"; }
 
-        public OCRTransformationResult Transform(System.IO.Stream imageStream)
+        /// <summary>
+        /// Ocr's base address
+        /// </summary>
+        public string BaseUrl => throw new NotImplementedException();
+
+        /// <summary>
+        /// Main transform methods
+        /// </summary>
+        /// <param name="file">Input file</param>
+        /// <returns></returns>
+        public OCRTransformationResult Transform(IFormFile file)
         {
             try
             {
@@ -33,7 +47,8 @@ namespace HamrahBina.Providers.OcrProviders
                 var preprocessing = "AUTO";
 
                 // Convert a scanned image into text
-                var result = apiInstance.ImageOcrPost(imageStream, language, preprocessing);
+                var readStream = file.OpenReadStream();
+                var result = apiInstance.ImageOcrPost(readStream, language, preprocessing);
                 return new OCRTransformationResult
                 {
                     IsSuccessful = true,

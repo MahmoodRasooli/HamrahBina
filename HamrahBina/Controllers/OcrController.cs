@@ -115,7 +115,8 @@ namespace HamrahBina.Controllers
             _context.ApiCallLogs.Add(apiCallLog);
             _context.SaveChanges(true);
 
-            var ocrApi = new HamrahBina.Providers.OcrProviders.CloudmersiveProvider();
+            //var ocrApi = new HamrahBina.Providers.OcrProviders.CloudmersiveProvider();
+            var ocrApi = new HamrahBina.Providers.OcrProviders.IranOcrProvider();
             var ocrCallLog = new OcrCallLog
             {
                 CreateDate = DateTime.Now,
@@ -124,8 +125,7 @@ namespace HamrahBina.Controllers
                 ApiCallLogId = apiCallLog.Id,
             };
 
-            var readStream = file.OpenReadStream();
-            var result = ocrApi.Transform(readStream);
+            var result = ocrApi.Transform(file);
             ocrCallLog.ResponseDate = DateTime.Now;
             ocrCallLog.Output = Newtonsoft.Json.JsonConvert.SerializeObject(result);
             ocrCallLog.IsSuccessful = result.IsSuccessful;

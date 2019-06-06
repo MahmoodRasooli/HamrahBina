@@ -76,7 +76,7 @@ namespace HamrahBina.Data
 
                 var adminUser = await _userManager.FindByNameAsync("admin@HamrahBina.com");
 
-                if (!(await _userManager.IsInRoleAsync(adminUser, "Admin")))
+                if (!await _userManager.IsInRoleAsync(adminUser, "Admin"))
                     await _userManager.AddToRoleAsync(adminUser, "Admin");
             }
             catch (Exception ex)

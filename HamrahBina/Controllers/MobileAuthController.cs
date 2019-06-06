@@ -96,11 +96,12 @@ namespace HamrahBina.Controllers
                     {
                         new Claim(ClaimTypes.NameIdentifier, currentUser.Id),
                         new Claim(ClaimTypes.Name, currentUser.UserName),
+                        new Claim(ClaimTypes.Role, "MobileUser")
                     };
 
                     var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Tokens:Key"]));
                     var credential = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-                    var token = new JwtSecurityToken(_config["Tokens:Issuer"], _config["Tokens:Issuer"], claims, expires: DateTime.Now.AddDays(30), signingCredentials: credential);
+                    var token = new JwtSecurityToken(_config["Tokens:Issuer"], _config["Tokens:Issuer"], claims, expires: DateTime.Now.AddDays(1), signingCredentials: credential);
                     return new OkObjectResult(new ApiResponseDto<LoginResponseDto>
                     {
                         Status = true,
